@@ -5,6 +5,12 @@ import { VehicleLockConfig } from '../shared/config.js';
 
 const Rebar = useRebar();
 
+const useVehicleLock = () => {
+    
+    /**
+     * Function to turn on and off vehicle blinkers.
+     * @param vehicle Closest vehicle owned by Player
+     */
 async function turnBlinkersOn(vehicle: alt.Vehicle) {
     vehicle.lightState = 2;
     await alt.Utils.wait(300);
@@ -17,7 +23,7 @@ async function turnBlinkersOn(vehicle: alt.Vehicle) {
     vehicle.lightState = 0;
 }
 
-Rebar.useKeybinder().on(VehicleLockConfig.vehicleKey, async (player: alt.Player) => {
+    async function lockUnlock(player: alt.Player) {
     if (!player || !player.valid) return;
     const rPlayer = Rebar.usePlayer(player);
     if (!rPlayer.isValid()) return;
@@ -35,15 +41,15 @@ Rebar.useKeybinder().on(VehicleLockConfig.vehicleKey, async (player: alt.Player)
         if (stateProps.lockState == 1) {
                 stateProps.lockState = 2;
             // await rPlayer.animation.playFinite('anim@mp_player_intmenu@key_fob@', 'fob_click_fp', 49, 1250, false);
+                rPlayer.audio.playSound('sounds/vehicle-lock-unlock.ogg');
             alt.emitAllClients(VehicleLockEvents.toClient.playAnim, player, vehicle);
             await turnBlinkersOn(vehicle);
-            // rPlayer.audio.playSound('/sounds/vehicle-lock-unlock.ogg');
         } else {
                 stateProps.lockState = 1;
             // await rPlayer.animation.playFinite('anim@mp_player_intmenu@key_fob@', 'fob_click_fp', 49, 1250, false);
+                rPlayer.audio.playSound('sounds/vehicle-lock-unlock.ogg');
             alt.emitAllClients(VehicleLockEvents.toClient.playAnim, player, vehicle);
             await turnBlinkersOn(vehicle);
-            // rPlayer.audio.playSound('/sounds/vehicle-lock-unlock.ogg');
         }
         vehicle.lockState = stateProps.lockState;
         await vehicleDoc.set('stateProps', stateProps);
@@ -52,4 +58,13 @@ Rebar.useKeybinder().on(VehicleLockConfig.vehicleKey, async (player: alt.Player)
         console.log(keys);
         // TODO: Implement keys system (Keys are an array with players _id)
     }
-});
+    }
+
+
+    return {
+        lockUnlock
+    }
+}
+
+Rebar.useKeybinder().on(VehicleLockConfig.vehicleKey, useVehicleLock().lockUnlock);
+
