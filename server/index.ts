@@ -40,9 +40,14 @@ const useVehicleLock = () => {
             if (stateProps.lockState == 1) {
                 stateProps.lockState = 2;
                 alt.setTimeout(async () => {
-                    alt.emitAllClients(VehicleLockEvents.toClient.playAnim, player, vehicle);
+                    alt.emitAllClients(
+                        VehicleLockEvents.toClient.playAnim,
+                        player,
+                        vehicle,
+                        'Remote_Control_Close PI_Menu_Sounds',
+                    );
                     await turnBlinkersOn(vehicle);
-                }, 400);
+                }, 250);
                 if (player.seat === 0)
                     await rPlayer.animation.playFinite(
                         'anim@mp_player_intmenu@key_fob@',
@@ -54,9 +59,14 @@ const useVehicleLock = () => {
             } else {
                 stateProps.lockState = 1;
                 alt.setTimeout(async () => {
-                    alt.emitAllClients(VehicleLockEvents.toClient.playAnim, player, vehicle);
+                    alt.emitAllClients(
+                        VehicleLockEvents.toClient.playAnim,
+                        player,
+                        vehicle,
+                        'Remote_Control_Open PI_Menu_Sounds',
+                    );
                     await turnBlinkersOn(vehicle);
-                }, 400);
+                }, 250);
                 if (player.seat === 0)
                     await rPlayer.animation.playFinite(
                         'anim@mp_player_intmenu@key_fob@',
@@ -81,4 +91,3 @@ const useVehicleLock = () => {
 };
 
 Rebar.useKeybinder().on(VehicleLockConfig.vehicleKey, useVehicleLock().lockUnlock);
-
