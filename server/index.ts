@@ -38,8 +38,11 @@ const useVehicleLock = () => {
         if (owner === rPlayer.character.getField('_id')) {
             const stateProps = vehicleDoc.getField('stateProps');
             if (stateProps.lockState == 1) {
-                alt.emitAllClients(VehicleLockEvents.toClient.playAnim, player, vehicle);
                 stateProps.lockState = 2;
+                alt.setTimeout(async () => {
+                    alt.emitAllClients(VehicleLockEvents.toClient.playAnim, player, vehicle);
+                    await turnBlinkersOn(vehicle);
+                }, 400);
                 if (player.seat === 0)
                     await rPlayer.animation.playFinite(
                         'anim@mp_player_intmenu@key_fob@',
@@ -48,10 +51,12 @@ const useVehicleLock = () => {
                         1250,
                         false,
                     );
-                await turnBlinkersOn(vehicle);
             } else {
-                alt.emitAllClients(VehicleLockEvents.toClient.playAnim, player, vehicle);
                 stateProps.lockState = 1;
+                alt.setTimeout(async () => {
+                    alt.emitAllClients(VehicleLockEvents.toClient.playAnim, player, vehicle);
+                    await turnBlinkersOn(vehicle);
+                }, 400);
                 if (player.seat === 0)
                     await rPlayer.animation.playFinite(
                         'anim@mp_player_intmenu@key_fob@',
@@ -60,7 +65,6 @@ const useVehicleLock = () => {
                         1250,
                         false,
                     );
-                await turnBlinkersOn(vehicle);
             }
             vehicle.lockState = stateProps.lockState;
             await vehicleDoc.set('stateProps', stateProps);
