@@ -40,14 +40,10 @@ const useVehicleLock = () => {
             if (stateProps.lockState == 1) {
                 alt.emitAllClients(VehicleLockEvents.toClient.playAnim, player, vehicle);
                 stateProps.lockState = 2;
-                rPlayer.audio.playSound('sounds/vehicle-lock-unlock.ogg');
-                // await rPlayer.animation.playFinite('anim@mp_player_intmenu@key_fob@', 'fob_click_fp', 49, 1250, false);
                 await turnBlinkersOn(vehicle);
             } else {
                 alt.emitAllClients(VehicleLockEvents.toClient.playAnim, player, vehicle);
                 stateProps.lockState = 1;
-                // await rPlayer.animation.playFinite('anim@mp_player_intmenu@key_fob@', 'fob_click_fp', 49, 1250, false);
-                rPlayer.audio.playSound('sounds/vehicle-lock-unlock.ogg');
                 await turnBlinkersOn(vehicle);
             }
             vehicle.lockState = stateProps.lockState;

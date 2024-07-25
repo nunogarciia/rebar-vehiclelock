@@ -2,7 +2,7 @@ import * as alt from 'alt-client';
 import * as native from 'natives';
 import { VehicleLockEvents } from '../shared/events.js';
 
-alt.onServer(VehicleLockEvents.toClient.playAnim, (player: alt.Player, vehicle: alt.Vehicle) => {
+alt.onServer(VehicleLockEvents.toClient.playAnim, async (player: alt.Player, vehicle: alt.Vehicle) => {
     native.taskPlayAnim(
         player,
         'anim@mp_player_intmenu@key_fob@',
@@ -15,5 +15,22 @@ alt.onServer(VehicleLockEvents.toClient.playAnim, (player: alt.Player, vehicle: 
         false,
         false,
         false,
+    );
+    native.playSoundFromEntity(
+        native.getSoundId(),
+        'Bomb_Countdown_Beep',
+        vehicle,
+        'DLC_MPSUM2_ULP2_Rogue_Drones',
+        true,
+        0,
+    );
+    await alt.Utils.wait(350);
+    native.playSoundFromEntity(
+        native.getSoundId(),
+        'Bomb_Countdown_Beep',
+        vehicle,
+        'DLC_MPSUM2_ULP2_Rogue_Drones',
+        true,
+        0,
     );
 });
