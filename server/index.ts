@@ -22,6 +22,11 @@ const useVehicleLock = () => {
         vehicle.lightState = 0;
     }
 
+    /**
+     * Function to Lock/Unlock the closest vehicle owned by the player
+     *
+     * @param player alt.Player
+     */
     async function lockUnlock(player: alt.Player) {
         if (!player || !player.valid) return;
         const rPlayer = Rebar.usePlayer(player);
@@ -44,7 +49,7 @@ const useVehicleLock = () => {
                         VehicleLockEvents.toClient.playAnim,
                         player,
                         vehicle,
-                        'Remote_Control_Close PI_Menu_Sounds',
+                        VehicleLockConfig.sound.lock,
                     );
                     await turnBlinkersOn(vehicle);
                 }, 250);
@@ -63,7 +68,7 @@ const useVehicleLock = () => {
                         VehicleLockEvents.toClient.playAnim,
                         player,
                         vehicle,
-                        'Remote_Control_Open PI_Menu_Sounds',
+                        VehicleLockConfig.sound.unlock,
                     );
                     await turnBlinkersOn(vehicle);
                 }, 250);
@@ -90,4 +95,5 @@ const useVehicleLock = () => {
     };
 };
 
+// Listen for Key press
 Rebar.useKeybinder().on(VehicleLockConfig.vehicleKey, useVehicleLock().lockUnlock);
